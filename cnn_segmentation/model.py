@@ -2,6 +2,15 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import segmentation_models_pytorch as smp
+
+try:
+    get_ipython
+    from tqdm.notebook import tqdm
+except NameError:
+    from tqdm import tqdm
+
+from tqdm.notebook import tqdm
+
 from tqdm import tqdm
 import time
 import numpy as np

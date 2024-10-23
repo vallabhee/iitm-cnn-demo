@@ -9,8 +9,8 @@ import cv2
 import albumentations as A
 from PIL import Image
 
-IMAGE_PATH = "data/drone/dataset/semantic_drone_dataset/original_images/"
-MASK_PATH = "data/drone/dataset/semantic_drone_dataset/label_images_semantic/"
+IMAGE_PATH = "data/dataset/semantic_drone_dataset/original_images/"
+MASK_PATH = "data/dataset/semantic_drone_dataset/label_images_semantic/"
 
 
 def create_df():
