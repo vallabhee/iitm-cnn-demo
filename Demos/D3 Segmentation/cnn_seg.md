@@ -2,15 +2,6 @@
 
 This tutorial will guide you through the process of implementing a Convolutional Neural Network (CNN) for image segmentation using PyTorch. We'll cover each step of the process, from data preparation to model training and inference.
 
-## Table of Contents
-- [CNN Image Segmentation Tutorial](#cnn-image-segmentation-tutorial)
-  - [Table of Contents](#table-of-contents)
-  - [Introduction to Image Segmentation](#introduction-to-image-segmentation)
-  - [Visualizing Raw Data and Masks](#visualizing-raw-data-and-masks)
-  - [Creating Data Loaders](#creating-data-loaders)
-  - [Data Processing and Augmentation](#data-processing-and-augmentation)
-
-
 ## Introduction to Image Segmentation
 
 Image segmentation is the process of partitioning an image into multiple segments or regions, each corresponding to a different object or part of the image. In this tutorial, we'll use a CNN to perform semantic segmentation on drone imagery, where each pixel is classified into one of several predefined categories.
