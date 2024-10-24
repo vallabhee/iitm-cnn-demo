@@ -166,3 +166,5 @@ checkpoints/
 *.pt
 *.pdf
 nohup.out
+
+extras/
