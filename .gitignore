@@ -163,7 +163,7 @@ cython_debug/
 data/
 checkpoints/
 *.pth
-*.pt
+
 *.pdf
 nohup.out
 
