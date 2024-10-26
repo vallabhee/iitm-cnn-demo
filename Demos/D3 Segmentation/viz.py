@@ -88,3 +88,44 @@ def visualize_predictions(
             plt.close(fig)
 
         print(f"Visualizations saved to {output_pdf}")
+
+
+def visualize_sample(dataloader, num_classes=23):
+    """Visualize a single sample image and its segmentation mask from a dataloader."""
+    # Get a single batch from the dataloader
+    images, masks = next(iter(dataloader))
+
+    # Take the first image and mask from the batch
+    img = images[0].permute(1, 2, 0).numpy()  # Convert from CxHxW to HxWxC
+    mask = masks[0].numpy()
+
+    # Denormalize the image
+    mean = np.array([0.485, 0.456, 0.406])
+    std = np.array([0.229, 0.224, 0.225])
+    img = std * img + mean
+    img = np.clip(img, 0, 1)
+
+    # Create a colormap for the segmentation mask
+    cmap = plt.get_cmap("tab20")
+
+    # Create a figure with three subplots
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(15, 5))
+
+    # Plot original image
+    ax1.imshow(img)
+    ax1.set_title("Sample Image")
+    ax1.axis("off")
+
+    # Plot segmentation mask
+    ax2.imshow(mask, cmap=cmap, vmin=0, vmax=num_classes - 1)
+    ax2.set_title("Segmentation Mask")
+    ax2.axis("off")
+
+    # Plot overlay
+    ax3.imshow(img)
+    ax3.imshow(mask, cmap=cmap, vmin=0, vmax=num_classes - 1, alpha=0.5)
+    ax3.set_title("Overlay")
+    ax3.axis("off")
+
+    plt.tight_layout()
+    plt.show()

@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from cnn_data import get_data_loaders
 from model import create_model, fit, evaluate_model, resume_from_checkpoint
-from viz import plot_loss, plot_score, plot_acc, visualize_predictions
+from viz import plot_loss, plot_score, plot_acc, visualize_predictions, visualize_sample
 import os
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -12,6 +12,9 @@ def train_model():
     # Get data loaders
     train_loader, val_loader, test_set = get_data_loaders(batch_size=16)
 
+    # Visualize a sample image and its segmentation mask
+    visualize_sample(train_loader)
+
     # Create model
     model = create_model()
 
@@ -20,10 +23,15 @@ def train_model():
     epochs = 30
     weight_decay = 1e-4
 
+    # Loss function
     criterion = nn.CrossEntropyLoss()
+
+    # Optimizer
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=max_lr, weight_decay=weight_decay
     )
+
+    # Learning rate scheduler
     sched = torch.optim.lr_scheduler.OneCycleLR(
         optimizer, max_lr, epochs=epochs, steps_per_epoch=len(train_loader)
     )

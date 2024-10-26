@@ -191,42 +191,92 @@ def fit(
 def predict_image_mask_miou(
     model, image, mask, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
 ):
+    # Set model to evaluation mode to disable training-specific operations like dropout
     model.eval()
-    t = transforms.Compose(
-        [transforms.ToTensor(), transforms.Normalize(mean, std)]
-    )  # Change this line
+
+    # Create a transformation pipeline to normalize the input image using ImageNet statistics
+    t = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean, std)])
+
+    # Apply the transformations to convert the input image to a normalized tensor
     image = t(image)
+
+    # Move the model to the appropriate device (CPU/GPU)
     model.to(device)
+
+    # Move the input image tensor to the same device as the model
     image = image.to(device)
+
+    # Move the ground truth mask to the same device as the model
     mask = mask.to(device)
+
+    # Disable gradient computation since we're only doing inference
     with torch.no_grad():
+        # Add batch dimension to the image tensor
         image = image.unsqueeze(0)
+
+        # Add batch dimension to the mask tensor
         mask = mask.unsqueeze(0)
+
+        # Get model predictions by passing the image through the model
         output = model(image)
+
+        # Calculate mean IoU score between predicted and ground truth masks
         score = mIoU(output, mask)
+
+        # Convert model output probabilities to class predictions
         masked = torch.argmax(output, dim=1)
+
+        # Move predictions to CPU and remove batch dimension
         masked = masked.cpu().squeeze(0)
+
+    # Return the predicted segmentation mask and its IoU score
     return masked, score
 
 
 def predict_image_mask_pixel(
     model, image, mask, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
-):
+):  # Function takes model, image, mask and normalization parameters as input,
+    # similar to predict_image_mask_miou
+
+    # Set model to evaluation mode to disable training-specific operations like dropout
     model.eval()
-    t = transforms.Compose(
-        [transforms.ToTensor(), transforms.Normalize(mean, std)]
-    )  # Change this line
+
+    # Create a transformation pipeline to normalize the input image using ImageNet statistics
+    t = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean, std)])
+
+    # Apply the transformations to convert the input image to a normalized tensor
     image = t(image)
+
+    # Move the model to the appropriate device (CPU/GPU)
     model.to(device)
+
+    # Move the input image tensor to the same device as the model
     image = image.to(device)
+
+    # Move the ground truth mask to the same device as the model
     mask = mask.to(device)
+
+    # Disable gradient computation since we're only doing inference
     with torch.no_grad():
+        # Add batch dimension to the image tensor
         image = image.unsqueeze(0)
+
+        # Add batch dimension to the mask tensor
         mask = mask.unsqueeze(0)
+
+        # Get model predictions by passing the image through the model
         output = model(image)
+
+        # Calculate pixel accuracy between predicted and ground truth masks
         acc = pixel_accuracy(output, mask)
+
+        # Convert model output probabilities to class predictions
         masked = torch.argmax(output, dim=1)
+
+        # Move predictions to CPU and remove batch dimension
         masked = masked.cpu().squeeze(0)
+
+    # Return the predicted segmentation mask and its pixel accuracy score
     return masked, acc
 
 
@@ -235,7 +285,7 @@ def evaluate_model(model, test_set):
     accuracy = []
     for i in tqdm(range(len(test_set))):
         img, mask = test_set[i]
-        pred_mask, score = predict_image_mask_miou(model, img, mask)
+        _, score = predict_image_mask_miou(model, img, mask)
         score_iou.append(score)
         _, acc = predict_image_mask_pixel(model, img, mask)
         accuracy.append(acc)

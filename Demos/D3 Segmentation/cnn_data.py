@@ -112,6 +112,7 @@ def get_data_loaders(batch_size=16):
     mean = [0.485, 0.456, 0.406]
     std = [0.229, 0.224, 0.225]
 
+    # Describe the transformations applied to the training set
     t_train = A.Compose(
         [
             A.Resize(704, 1056, interpolation=cv2.INTER_NEAREST),
@@ -123,6 +124,7 @@ def get_data_loaders(batch_size=16):
         ]
     )
 
+    # Describe the transformations applied to the validation set
     t_val = A.Compose(
         [
             A.Resize(704, 1056, interpolation=cv2.INTER_NEAREST),
